@@ -8,14 +8,18 @@ import getClient from './services/get-client'
 
 const theme = createTheme()
 const client = getClient()
-
-ReactDOM.render(
-    <React.StrictMode>
+const Root = () => {
+    return (
         <ApolloProvider client={client}>
             <ThemeProvider theme={theme}>
                 <App />
             </ThemeProvider>
         </ApolloProvider>
+    )
+}
+ReactDOM.render(
+    <React.StrictMode>
+        <Root />
     </React.StrictMode>,
     document.getElementById('root')
 )
