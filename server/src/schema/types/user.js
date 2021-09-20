@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql/type'
+import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql/type';
 
 export default new GraphQLObjectType({
     name: 'USER',
@@ -16,4 +16,4 @@ export default new GraphQLObjectType({
             type: GraphQLString,
         },
     }),
-})
+});

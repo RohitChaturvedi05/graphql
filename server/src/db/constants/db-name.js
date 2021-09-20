@@ -1,3 +1,3 @@
 export default {
-  GRAPHQL: 'graphql'
+    GRAPHQL: 'graphql',
 };
