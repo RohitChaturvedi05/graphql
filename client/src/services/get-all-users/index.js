@@ -17,7 +17,6 @@ const query = `query GetAllUsers($page: Int, $pageSize: Int){
   }
 }
 `
-
 const parseResponse = ({ response }) => {
     const { users = [], rowsCount = 0 } = getOr({}, 'data.getAllUsers', response)
 
@@ -27,10 +26,13 @@ const parseResponse = ({ response }) => {
     }
 }
 
-const getAllUsers = (page = 1, pageSize = 10) =>
+const getAllUsers = (page = 1, pageSize = 10, authorization) =>
     ajax(
         getOptions({
-            body: JSON.stringify({ query, variables: { page, pageSize } }),
+            headers: {
+                authorization
+            },
+            body: { query, variables: { page, pageSize } },
             url: Env.api.graphql,
         })
     ).pipe(map(parseResponse))

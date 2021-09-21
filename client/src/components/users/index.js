@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
@@ -8,22 +8,24 @@ import { take } from 'rxjs/operators'
 import getAllUsers from '../../services/get-all-users'
 import Row from './row'
 import Headers from './tab-header'
+import AuthContext from '../../context/auth'
+
 
 export default function CustomPaginationActionsTable() {
-    const [page, setPage] = React.useState(0)
-    const [rowsPerPage, setRowsPerPage] = React.useState(10)
-    const [rows, setRows] = React.useState([])
-    const [count, setCount] = React.useState(0)
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [rows, setRows] = useState([])
+    const [count, setCount] = useState(0)
+    const auth = useContext(AuthContext)
 
-    React.useEffect(() => {
-        getAllUsers(page + 1, rowsPerPage)
+    useEffect(() => {
+        getAllUsers(page + 1, rowsPerPage, auth.token)
             .pipe(take(1))
             .subscribe(({ users, rowsCount }) => {
-                console.log(users, rowsCount)
                 setCount(rowsCount)
                 setRows(users)
             })
-    }, [page, rowsPerPage, setRows])
+    }, [auth, page, rowsPerPage, setRows])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
@@ -47,7 +49,7 @@ export default function CustomPaginationActionsTable() {
         },
         [rows]
     )
-    console.log(rows)
+
     return (
         <Paper>
             <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
