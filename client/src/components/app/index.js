@@ -1,30 +1,37 @@
+import React from 'react'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { withStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
-import React, { useEffect, useState } from 'react'
-import { take } from 'rxjs/operators'
-import AuthContext from '../../context/auth'
-import login$ from '../../services/login'
+import PropTypes from 'prop-types'
+import { AuthProvider } from '../../authentication'
+import ProtectedRoute from '../protected-route'
 import Header from '../header'
+import Login from '../login'
 import Users from '../users'
+import styles from './styles'
 
 
-export default function App() {
-    const [token, setToken] = useState(null)
-    useEffect(() => {
-        login$.pipe(take(1)).subscribe(token => setToken(token))
-
-    }, [setToken])
-
-    if (!token) {
-        return <Paper>
-            fetching login token....
+const App = ({ classes }) => (
+    <AuthProvider>
+        <Paper className={classes.root}>
+            <Header />
+            <BrowserRouter>
+                <Switch>
+                    <Route path='/login' component={Login} />
+                    <ProtectedRoute path='/users' component={Users} />
+                    <Route path='/' component={Login} />
+                </Switch>
+            </BrowserRouter>
         </Paper>
-    }
-    return (
-        <AuthContext.Provider value={{ token, isAuth: true }}>
-            <Paper>
-                <Header />
-                <Users />
-            </Paper>
-        </AuthContext.Provider>
-    )
+    </AuthProvider>
+)
+
+App.displayName = 'App'
+
+App.propTypes = {
+    classes: PropTypes.shape({
+        root: PropTypes.string.isRequired
+    })
 }
+
+export default withStyles(styles)(App)

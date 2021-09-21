@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
@@ -8,15 +8,15 @@ import { take } from 'rxjs/operators'
 import getAllUsers from '../../services/get-all-users'
 import Row from './row'
 import Headers from './tab-header'
-import AuthContext from '../../context/auth'
+import { useAuth } from '../../authentication'
 
 
-export default function CustomPaginationActionsTable() {
+const Users = () => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [rows, setRows] = useState([])
     const [count, setCount] = useState(0)
-    const auth = useContext(AuthContext)
+    const auth = useAuth()
 
     useEffect(() => {
         getAllUsers(page + 1, rowsPerPage, auth.token)
@@ -74,3 +74,9 @@ export default function CustomPaginationActionsTable() {
         </Paper>
     )
 }
+
+Users.displayName = 'App-Users'
+
+Users.propTypes = {}
+
+export default Users
