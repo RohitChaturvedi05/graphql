@@ -9,7 +9,7 @@ const logger = (message, type = Type.Info) => {
         return;
     }
     const msg = typeof message === 'object' ? JSON.stringify(message) : message;
-    console.log(new Date().toISOString(), type, msg);
+    console.log(new Date().toISOString(), `[${type}]`, msg);
 };
 
 logger.Type = Type;

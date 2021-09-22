@@ -6,6 +6,9 @@ import { getClient as initClient, getDB } from './db';
 import schema from './schema';
 import logger from './logger';
 import testDB from './db/test-db';
+import authGenerateToken from './auth/generate';
+import authenticateToken from './auth/verify';
+import getOr from 'lodash/fp/getOr';
 
 Dotenv.config();
 (async function () {
@@ -21,8 +24,22 @@ Dotenv.config();
     const db = await getDB();
 
     app.use(cors());
+
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+
+    app.post('/login', (req, res) => {
+        const username = getOr('', 'body.username', req)
+        if (username === 'rchaturvedi') {
+            const token = authGenerateToken(username);
+            return res.status(200).json(token)
+        }
+        return res.status(403).json({ message: 'Invalid user, Unable to generate token', status: 403 })
+    });
+
     app.use(
         '/graphql',
+        authenticateToken,
         graphqlHTTP({
             schema,
             graphiql,
